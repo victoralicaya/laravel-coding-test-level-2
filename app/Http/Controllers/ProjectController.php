@@ -15,7 +15,11 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        //
+        $projects = Project::all();
+        return response()->json([
+            'status' => true,
+            'data' => $projects
+        ], 200);
     }
 
     /**
@@ -26,7 +30,12 @@ class ProjectController extends Controller
      */
     public function store(ProjectRequest $request)
     {
-        //
+        $project = Project::create($request->validated());
+        return response()->json([
+            'status' => true,
+            'message' => 'Project added successfully',
+            'data' => $project
+        ], 201);
     }
 
     /**
@@ -37,7 +46,10 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        //
+        return response()->json([
+            'status' => true,
+            'data' => $project
+        ], 200);
     }
 
     /**
@@ -49,7 +61,12 @@ class ProjectController extends Controller
      */
     public function update(ProjectRequest $request, Project $project)
     {
-        //
+        $project->update($request->validated());
+        return response()->json([
+            'status' => true,
+            'message' => 'Project updated successfully',
+            'data' => $project
+        ], 200);
     }
 
     /**
@@ -60,6 +77,10 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
-        //
+        $project->delete();
+        return response()->json([
+            'status' => true,
+            'message' => 'Project Deleted Successfully'
+        ], 200);
     }
 }

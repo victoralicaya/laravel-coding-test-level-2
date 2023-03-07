@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Ramsey\Uuid\Uuid;
 
 class User extends Authenticatable
 {
@@ -22,6 +21,7 @@ class User extends Authenticatable
         'name',
         'username',
         'password',
+        'role',
     ];
 
     /**
@@ -43,15 +43,18 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    protected $primaryKey = 'id';
+    public $incrementing = false;
+
     public function tasks() {
         return $this->hasMany(Task::class);
     }
 
-    public static function boot() {
+    protected static function boot()
+    {
         parent::boot();
-
-        self::addGlobalScope(function(Builder $builder) {
-            $builder->where('user_id', 1);
+        static::creating(function ($model) {
+            $model->{$model->getKeyName()} = (string) Uuid::uuid4();
         });
     }
 }
