@@ -31,6 +31,7 @@ class ProjectController extends Controller
     public function store(ProjectRequest $request)
     {
         $project = Project::create($request->validated());
+
         return response()->json([
             'status' => true,
             'message' => 'Project added successfully',
@@ -62,6 +63,7 @@ class ProjectController extends Controller
     public function update(ProjectRequest $request, Project $project)
     {
         $project->update($request->validated());
+
         return response()->json([
             'status' => true,
             'message' => 'Project updated successfully',
@@ -78,6 +80,7 @@ class ProjectController extends Controller
     public function destroy(Project $project)
     {
         $project->delete();
+
         return response()->json([
             'status' => true,
             'message' => 'Project Deleted Successfully'
