@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LoginRequest;
 use App\Models\User;
 use App\Http\Requests\UserRequest;
-use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
@@ -97,9 +96,11 @@ class UserController extends Controller
         ]);
     }
 
-    // Login
-    public function login(LoginRequest $request) {
-
+    /**
+     * User Login
+     */
+    public function login(LoginRequest $request)
+    {
         if (Auth::attempt(['username' => $request->username, 'password' => $request->password])) {
             $user = Auth::user();
             $token = $user->createToken('auth-token')->plainTextToken;
@@ -113,6 +114,5 @@ class UserController extends Controller
             'status' => false,
             'error' => 'Username or Password is invalid',
         ], 401);
-
     }
 }
