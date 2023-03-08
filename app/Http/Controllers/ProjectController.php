@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProjectRequest;
 use App\Models\Project;
+use Illuminate\Http\Request;
 
 class ProjectController extends Controller
 {
@@ -12,11 +13,24 @@ class ProjectController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $projects = Project::all();
+        $pageSize = isset($request->pageSize) ? $request->pageSize : 3;
+        $sortBy = isset($request->sortBy) ? $request->sortBy : 'name';
+        $sortDirection = isset($request->sortDirection) ? $request->sortDirection : 'ASC';
+
+        $projects = Project::where('name', 'like', '%'.$request->q.'%')
+                ->orderBy($sortBy, $sortDirection)
+                ->paginate($pageSize);
+
+        $pagination = $projects->currentPage();
+        $index = ($pagination - $request->pageIndex) * $pageSize + 1;
+
+        $pageIndex = isset($request->pageIndex) ? $index : 0;
+
         return response()->json([
             'status' => true,
+            'pageIndex' => $pageIndex,
             'data' => $projects
         ], 200);
     }
