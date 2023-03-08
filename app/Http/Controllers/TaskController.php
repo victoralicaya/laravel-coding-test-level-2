@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use App\Http\Requests\TaskRequest;
 use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class TaskController extends Controller
 {
@@ -108,6 +110,37 @@ class TaskController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Task deleted successfully.'
+        ], 200);
+    }
+
+    /**
+     * update task status by member
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\Task  $task
+     * @return \Illuminate\Http\Response
+    */
+    public function updateTaskByMember(Request $request, Task $task)
+    {
+        $this->validate($request, [
+            'status' => [
+                'required',
+                Rule::in(['not_started', 'in_progress', 'ready_for_test', 'completed'])
+            ]
+        ]);
+
+        // the fields other than the status are populated to avoid updating them by the team member user
+        $task->update([
+            'title' => $task->title,
+            'status' => $request->status,
+            'description' => $task->description,
+            'project_id' => $task->project_id,
+            'user_id' => $task->user_id,
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Task status updated successfully.',
+            'data' => $task
         ], 200);
     }
 }

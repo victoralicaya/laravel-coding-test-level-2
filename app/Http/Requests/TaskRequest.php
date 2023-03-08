@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class TaskRequest extends FormRequest
 {
@@ -26,6 +27,7 @@ class TaskRequest extends FormRequest
         return [
             'title' => 'string|required',
             'description' => 'string',
+            'status' => Rule::in(['not_started', 'in_progress', 'ready_for_test', 'completed']),
             'project_id' => 'required|exists:projects,id',
             'user_id' => 'required|exists:users,id'
         ];

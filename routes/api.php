@@ -43,6 +43,8 @@ Route::prefix('v1')->group(function () {
             Route::patch('task/{task}/edit', [TaskController::class, 'update']);
             Route::delete('task/{task}/delete', [TaskController::class, 'destroy']);
         });
+
+        Route::patch('task/{task}/member-task-status-update', [TaskController::class, 'updateTaskByMember']);
     });
 });
 
