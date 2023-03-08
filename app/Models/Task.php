@@ -33,10 +33,6 @@ class Task extends Model
     public static function boot() {
         parent::boot();
 
-        self::addGlobalScope(function(Builder $builder) {
-            $builder->where('user_id', auth()->user()->id);
-        });
-
         static::creating(function ($model) {
             $model->{$model->getKeyName()} = (string) Uuid::uuid4();
         });

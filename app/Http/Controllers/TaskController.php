@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Task;
 use App\Http\Requests\TaskRequest;
+use App\Models\User;
 
 class TaskController extends Controller
 {
@@ -14,7 +15,12 @@ class TaskController extends Controller
      */
     public function index()
     {
-        //
+        $task = Task::all();
+
+        return response()->json([
+            'status' => true,
+            'data' => $task
+        ], 200);
     }
 
     /**
@@ -25,7 +31,30 @@ class TaskController extends Controller
      */
     public function store(TaskRequest $request)
     {
-        //
+        $user = User::findOrFail($request->user_id);
+
+        if ($user->role === 'admin') {
+            return response()->json([
+                'status' => false,
+                'message' => 'You cannot assign a task to admin.'
+            ], 401);
+        } else {
+            $user_id = $request->user_id;
+        }
+
+        $task = Task::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'status' => 'not_started',
+            'project_id' => $request->project_id,
+            'user_id' => $user_id,
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Task added successfully',
+            'data' => $task
+        ], 201);
     }
 
     /**
@@ -36,7 +65,10 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
-        //
+        return response()->json([
+            'status' => true,
+            'data' => $task
+        ], 200);
     }
 
     /**
@@ -48,7 +80,19 @@ class TaskController extends Controller
      */
     public function update(TaskRequest $request, Task $task)
     {
-        //
+        $task->update([
+            'title' => $request->title,
+            'description' => $request->description,
+            'status' => $request->status,
+            'project_id' => $request->project_id,
+            'user_id' => $request->user_id
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Task updated successfully.',
+            'data' => $task
+        ], 200);
     }
 
     /**
@@ -59,6 +103,11 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        //
+        $task->delete();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Task deleted successfully.'
+        ], 200);
     }
 }

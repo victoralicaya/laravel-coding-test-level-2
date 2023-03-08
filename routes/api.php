@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -35,6 +36,12 @@ Route::prefix('v1')->group(function () {
             Route::get('project/{project}', [ProjectController::class, 'show']);
             Route::patch('project/{project}/edit', [ProjectController::class, 'update']);
             Route::delete('project/{project}/delete', [ProjectController::class, 'destroy']);
+
+            Route::get('tasks', [TaskController::class, 'index']);
+            Route::post('tasks', [TaskController::class, 'store']);
+            Route::get('task/{task}', [TaskController::class, 'show']);
+            Route::patch('task/{task}/edit', [TaskController::class, 'update']);
+            Route::delete('task/{task}/delete', [TaskController::class, 'destroy']);
         });
     });
 });

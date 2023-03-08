@@ -18,6 +18,7 @@ class UserController extends Controller
     public function index()
     {
         $users = User::all();
+
         return response()->json([
             'status' => true,
             'data' => $users
@@ -37,6 +38,7 @@ class UserController extends Controller
             'password' => bcrypt($request->password),
             'role' => $request->role
         ]);
+
         return response()->json([
             'status' => true,
             'message' => 'User created successfully',
@@ -71,6 +73,7 @@ class UserController extends Controller
             'username' => $request->username,
             'password' => bcrypt($request->password),
         ]);
+
         return response()->json([
             'status' => true,
             'message' => 'User updated successfully',
@@ -87,6 +90,7 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
+
         return response()->json([
             'status' => true,
             'message' => 'User deleted successfully'
